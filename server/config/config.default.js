@@ -2,6 +2,8 @@
 
 'use strict'
 
+const path = require('path')
+
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
@@ -15,6 +17,15 @@ module.exports = appInfo => {
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1593071856977_324'
 
+  config.multipart = {
+    mode: 'file',
+    whitelist: () => {
+      return true
+    },
+  }
+
+  config.UPLOAD_DIR = path.resolve(__dirname, '..', 'app/public')
+
   // add your middleware config here
   config.middleware = []
 
@@ -26,5 +37,21 @@ module.exports = appInfo => {
   return {
     ...config,
     ...userConfig,
+    security: {
+      csrf: {
+        enable: false,
+      },
+    },
+    mongoose: {
+      client: {
+        url: 'mongodb://127.0.0.1:27017/project-training-camp',
+        options: {
+
+        },
+      },
+    },
+    jwt: {
+      secret: 'project-training-camp',
+    },
   }
 }
